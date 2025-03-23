@@ -28,9 +28,9 @@ install_nvm_node() {
   export NVM_DIR="$HOME/.nvm"
   [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
 
-  echo "Installing Node.js (latest LTS)..."
-  nvm install --lts
-  nvm use --lts
+  echo "Installing Node.js v20.18.1"
+  nvm install 20.18.1
+  nvm use 20.18.1
 
   # Verify installation
   echo "Node.js version: $(node -v)"
