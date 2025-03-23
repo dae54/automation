@@ -3,7 +3,7 @@
 # Function to update system packages
 update_system() {
     echo "Updating system packages..."
-    sudo apt update && sudo apt upgrade -y
+    sudo apt update
 }
 
 # Function to install Nginx
