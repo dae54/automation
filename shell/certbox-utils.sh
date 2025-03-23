@@ -67,7 +67,7 @@ show_menu() {
   echo "3) Obtain SSL Certificate for Nginx"
   echo "4) Obtain Wildcard SSL Certificate"
   echo "5) Test Certbot Auto-Renewal"
-  echo "6) Exit"
+  echo "q/Q) Exit"
 
   read -p "Enter your choice (1-5): " choice
 
@@ -80,11 +80,8 @@ show_menu() {
     obtain_wildcard_ssl_certificate "$wildcard_domain"
     ;;
   5) test_certbot_renewal ;;
-  6)
-    echo "Exiting..."
-    exit 0
-    ;;
-  *) echo "Invalid choice. Please enter a number between 1-5." ;;
+  q|Q) echo "Exiting..."; exit 0 ;;
+  *) echo "Invalid choice. Please enter a number between 1-4 or q/Q to exit." ;;
   esac
 }
 

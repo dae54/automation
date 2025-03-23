@@ -58,7 +58,7 @@ show_menu() {
   echo "5) Reload Nginx Configuration"
   echo "6) Enable Nginx on Boot"
   echo "7) Disable Nginx on Boot"
-  echo "8) Exit"
+  echo "q/Q) Exit"
 
   read -p "Enter your choice (1-5): " choice
 
@@ -70,8 +70,8 @@ show_menu() {
   5) reload_nginx ;;
   6) enable_nginx ;;
   7) disable_nginx ;;
-  8) exit 0 ;;
-  *) echo "Invalid choice. Please select a number between 1 and 8." ;;
+  q|Q) echo "Exiting..."; exit 0 ;;
+  *) echo "Invalid choice. Please select a number between 1 and 7 or q/Q to exit." ;;
   esac
 
 }

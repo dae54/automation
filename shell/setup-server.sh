@@ -58,7 +58,7 @@ show_menu() {
   echo "3) Install NVM & Node.js"
   echo "4) Install Certbot (Let's Encrypt)"
   echo "5) Run All"
-  echo "6) Exit"
+  echo "q/Q) Exit"
     
   read -p "Enter your choice (1-6): " choice
 
@@ -73,8 +73,8 @@ show_menu() {
           install_certbot
           echo "All tasks completed!"
           ;;
-      6) echo "Exiting..."; exit 0 ;;
-      *) echo "Invalid choice. Please enter a number between 1-6." ;;
+      q|Q) echo "Exiting..."; exit 0 ;;
+      *) echo "Invalid choice. Please enter a number between 1-6 or q/Q to exit." ;;
   esac
 }
 
