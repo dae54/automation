@@ -68,7 +68,6 @@ show_menu() {
       3) install_nvm_node ;;
       4) install_certbot ;;
       5) 
-          update_system
           install_nginx
           install_nvm_node
           install_certbot
