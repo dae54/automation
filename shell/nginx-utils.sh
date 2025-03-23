@@ -75,3 +75,9 @@ show_menu() {
   esac
 
 }
+
+
+# Run the main menu
+while true; do
+  show_menu
+done
