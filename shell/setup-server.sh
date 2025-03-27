@@ -37,27 +37,13 @@ install_nvm_node() {
   echo "npm version: $(npm -v)"
 }
 
-# Function to install Certbot (Let's Encrypt)
-install_certbot() {
-  update_system
-  
-  echo "Installing Certbot..."
-  sudo apt install -y certbot python3-certbot-nginx
-  echo "Certbot installed successfully!"
-
-  # Verify installation
-  echo "Nginx version: $(nginx -v 2>&1)"
-  echo "Certbot version: $(certbot --version)"
-}
-
 # Function to display menu and get user input
 show_menu() {
   echo "Choose an option:"
   echo "1) Update System Packages"
   echo "2) Install Nginx"
   echo "3) Install NVM & Node.js"
-  echo "4) Install Certbot (Let's Encrypt)"
-  echo "5) Run All"
+  echo "4) Run All"
   echo "q/Q) Exit"
     
   read -p "Enter your choice (1-6): " choice
@@ -66,11 +52,9 @@ show_menu() {
       1) update_system ;;
       2) install_nginx ;;
       3) install_nvm_node ;;
-      4) install_certbot ;;
-      5) 
+      4) 
           install_nginx
           install_nvm_node
-          install_certbot
           echo "All tasks completed!"
           ;;
       q|Q) echo "Exiting..."; exit 0 ;;
