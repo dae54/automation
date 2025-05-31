@@ -15,17 +15,23 @@ USE_UFW=false
 # ========== FUNCTIONS ==========
 
 print_usage() {
-  echo "Usage: $0 [--install] [--ufw] [--add-client <name>] [--qr <name>] [--help]"
+  echo "Usage: $0 [--install] [--ufw] [--add-client <name>] [--qr <name>] [--uninstall] [--help]"
   echo ""
-  echo "  --install           Install and configure WireGuard server"
+  echo "  --install           Install and configure WireGuard server (IPv4-only)"
   echo "  --ufw               Enable UFW firewall and allow WireGuard port"
   echo "  --add-client NAME   Add a new client with specified NAME"
   echo "  --qr NAME           Show QR code for client NAME"
+  echo "  --uninstall         Remove WireGuard and clean all configs"
   echo "  --help              Show this help message"
   exit 0
 }
 
 install_wireguard() {
+  if [[ -f "$WG_CONF" ]]; then
+    echo "⚠️  WireGuard is already installed at $WG_CONF"
+    exit 1
+  fi
+
   echo "[+] Installing WireGuard..."
   apt update && apt install -y wireguard qrencode curl
 
@@ -65,14 +71,27 @@ EOF
   echo "[✓] WireGuard server setup complete."
 }
 
+uninstall_wireguard() {
+  echo "[!] Stopping and removing WireGuard..."
+  systemctl stop wg-quick@$WG_INTERFACE || true
+  systemctl disable wg-quick@$WG_INTERFACE || true
+  rm -f "$WG_CONF"
+  rm -rf "$CLIENT_DIR"
+
+  echo "[+] Removing package..."
+  apt remove --purge -y wireguard qrencode
+  apt autoremove -y
+
+  echo "[✓] WireGuard and configs removed."
+}
+
 get_next_ip() {
   last_ip=$(grep AllowedIPs "$WG_CONF" | awk '{print $3}' | cut -d'/' -f1 | sort -t. -k4 -n | tail -n1)
   if [[ -z "$last_ip" ]]; then
     echo "10.0.0.2"
   else
     IFS='.' read -r o1 o2 o3 o4 <<< "$last_ip"
-    next_ip="10.0.0.$((o4+1))"
-    echo "$next_ip"
+    echo "10.0.0.$((o4+1))"
   fi
 }
 
@@ -138,6 +157,7 @@ while [[ "$#" -gt 0 ]]; do
     --ufw) USE_UFW=true ;;
     --add-client) DO_ADD=true; CLIENT_NAME="$2"; shift ;;
     --qr) DO_QR=true; QR_NAME="$2"; shift ;;
+    --uninstall) DO_UNINSTALL=true ;;
     --help) print_usage ;;
     *) echo "Unknown option: $1"; print_usage ;;
   esac
@@ -147,5 +167,6 @@ done
 # ========== EXECUTION ==========
 
 [ "$DO_INSTALL" = true ] && install_wireguard
+[ "$DO_UNINSTALL" = true ] && uninstall_wireguard
 [ "$DO_ADD" = true ] && add_client "$CLIENT_NAME"
 [ "$DO_QR" = true ] && show_qr "$QR_NAME"
