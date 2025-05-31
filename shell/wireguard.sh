@@ -142,7 +142,8 @@ show_qr() {
   [[ ! -f "$CONF" ]] && echo "❌ Client config not found: $CONF" && exit 1
 
   echo "[+] QR Code for $CLIENT_NAME:"
-  cat "$CONF" | qrencode -t ansiutf8
+  # cat "$CONF" | qrencode -t ansiutf8
+  qrencode -t ansiutf8 < $CONF
 }
 
 # ========== ARG PARSING ==========
