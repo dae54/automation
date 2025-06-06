@@ -43,13 +43,35 @@ setup_ufw() {
 }
 
 setup_fail2ban() {
-  sudo apt-get install fail2ban
-  echo "✅ Installed Fail2Ban."
+  echo "📦 Installing Fail2Ban..."
+  sudo apt-get update
+  sudo apt-get install -y fail2ban
 
-  # Start Fail2Ban and ensure it starts at boot
-  sudo systemctl start fail2ban
+  echo "🛠️ Configuring Fail2Ban..."
+  sudo tee /etc/fail2ban/jail.local >/dev/null <<EOF
+[DEFAULT]
+bantime  = 1h
+findtime  = 10m
+maxretry = 5
+backend = systemd
+ignoreip = 127.0.0.1/8 ::1
+
+[sshd]
+enabled = true
+port    = ssh   # Change this to your custom SSH port if applicable
+logpath = /var/log/auth.log
+EOF
+
+  echo "✅ jail.local configured."
+
+  echo "🚀 Starting Fail2Ban..."
+  sudo systemctl restart fail2ban
   sudo systemctl enable fail2ban
-  echo "✅ Started and enabled Fail2Ban."
+
+  echo "✅ Fail2Ban is active and enabled at boot."
+
+  echo "🔍 Status:"
+  sudo fail2ban-client status sshd
 }
 
 # Function to install NVM and Node.js (LTS)
